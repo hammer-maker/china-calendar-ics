@@ -1,0 +1,29 @@
+name: Build combined China calendar
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 2 * * 1"  # Every Monday at 02:17 UTC
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Merge upstream ICS feeds
+        run: python merge_calendar.py
+      - name: Commit updated calendar
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/china-calendar.ics
+          git diff --cached --quiet || git commit -m "Update combined China calendar"
+          git push
