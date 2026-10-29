@@ -85,7 +85,7 @@ def main():
     for event in unique.values():
         lines.extend(event.splitlines())
     lines.extend(["END:VCALENDAR", ""])
-    out = Path("public/china-calendar.ics")
+    out = Path("china-calendar.ics")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\r\n".join(lines), encoding="utf-8")
     print(f"Wrote {out}: {len(unique)} unique events.")
